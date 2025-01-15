@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ベッティングプール
+model BettingPool {
+  id            String    @id @default(uuid())
+  title         String
+  description   String
+  startTime     DateTime
+  endTime       DateTime
+  status        String    @default("active") // active, completed, cancelled, draw
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  bets          Bet[]
+  matchResults  MatchResult[]
+}
+
+// ベット履歴
+model Bet {
+  id            String      @id @default(uuid())
+  poolId        String
+  pool          BettingPool @relation(fields: [poolId], references: [id])
+  userAddress   String      // Suiウォレットアドレス
+  amount        Float
+  tokenType     String      // "sui" or "usdc"
+  betType       String      // "yes" or "no"
+  status        String      @default("active") // active, won, lost, refunded
+  payout        Float?      // 払い出し額（勝利時）
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@index([userAddress])
+  @@index([poolId])
+}
+
+// 試合結果
+model MatchResult {
+  id            String      @id @default(uuid())
+  poolId        String
+  pool          BettingPool @relation(fields: [poolId], references: [id])
+  matchNumber   Int
+  survivorCount Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([poolId, matchNumber])
+}

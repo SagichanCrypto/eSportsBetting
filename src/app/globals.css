@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 10, 10, 18;
+  --background-end-rgb: 17, 17, 27;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+}
+
+/* ネオングロー効果 */
+.neon-glow {
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5),
+               0 0 20px rgba(168, 85, 247, 0.3),
+               0 0 30px rgba(168, 85, 247, 0.2);
+}
+
+.neon-box {
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.3),
+              0 0 20px rgba(168, 85, 247, 0.2),
+              inset 0 0 10px rgba(168, 85, 247, 0.2);
+} 
